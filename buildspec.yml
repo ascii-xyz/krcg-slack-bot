@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - (cd krcgbot && npm install)
+  build:
+    commands:
+      - echo "Starting SAM packaging `date` in `pwd`"
+      - aws cloudformation package --template-file template.yml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file packaged.yml
+  post_build:
+    commands:
+      - echo "SAM packaging completed on `date`"
+
+cache:
+  patchs:
+    - 'krcgbot/node_modules/**/*'
+    - '.git/**/*'
+
+artifacts:
+  files:
+    - packaged.yml
+  discard-paths: yes
