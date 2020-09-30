@@ -168,7 +168,7 @@ Resources:
                 ChangeSetName: krcg-slack-bot-ChangeSet-Prod
                 TemplatePath: BuildArtifactAsZip::packaged.yml
                 Capabilities: CAPABILITY_IAM
-                ParameterOverrides: '{"DomainName": "krcg.as-cii.xyz"}'
+                ParameterOverrides: '{"DomainName": "krcg.as-cii.xyz", "SlackAccessToken": "/service/krcg-slack-bot/slack/accesstoken/prod", "SlackVerificationToken": "/service/krcg-slack-bot/slack/slackverificationtoken/prod"}'
               InputArtifacts:
                 - Name: BuildArtifactAsZip
               RunOrder: 2
