@@ -1,0 +1,3 @@
+{
+  "body": "{\"token\": \"slack_verification_token\", \"challenge\": \"challenge_value\", \"type\": \"url_verification\"}"
+}

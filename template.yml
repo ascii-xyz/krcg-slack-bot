@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Description: krcg-slack-bot-backend
+
+Parameters:
+  DomainName:
+    Description: Domain name for reaching the API
+    Type: String
+    Default: "dev.as-cii.xyz"
+  CertificateArn:
+    Description: ARN for certificate to use for TLS
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /service/krcg-slack-bot/aws/certificatearn
+  HostedZoneId:
+    Description: Route53 hosted zone ID
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /service/krcg-slack-bot/aws/hostedzoneid
+  SlackAccessToken:
+    Description: Token required to send messages to Slack
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /service/krcg-slack-bot/slack/accesstoken/test
+  SlackVerificationToken:
+    Description: Token used to verify that requests originate from Slack
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /service/krcg-slack-bot/slack/slackverificationtoken/test
+
+Globals:
+  Api:
+    OpenApiVersion: 3.0.1
+
+Resources:
+  krcgApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: krcg
+      EndpointConfiguration:
+        Type: REGIONAL
+      Domain:
+        DomainName: !Ref DomainName
+        CertificateArn: !Ref CertificateArn
+        EndpointConfiguration: REGIONAL
+        Route53:
+          HostedZoneId: !Ref HostedZoneId
+  ApiFunctions:
+    Type: AWS::Serverless::Function
+    Properties:
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /
+            Method: post
+            RestApiId:
+              Ref: krcgApi
+      Environment:
+        Variables:
+          BOT_TOKEN: !Ref SlackAccessToken
+          SLACK_VERIFICATION_TOKEN: !Ref SlackVerificationToken
+      Runtime: nodejs12.x
+      Handler: app.lambdaHandler
+      CodeUri: krcgbot/
