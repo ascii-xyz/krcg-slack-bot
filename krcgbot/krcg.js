@@ -25,6 +25,7 @@ const buildImageBlock = (cardName) => {
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/ /g, '')
     .replace(/-/g, '')
+    //.replace(/,/g, '')
     .toLowerCase();
   const imageUrl = `https://codex-of-the-damned.org/card-images/${encodeURI(shortenedCardName)}.jpg`;
   return {
