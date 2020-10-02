@@ -19,20 +19,12 @@ const buildRulingBlock = (rulings) => {
   }
 };
 
-const buildImageBlock = (cardName) => {
-  const shortenedCardName = cardName
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/ /g, '')
-    .replace(/-/g, '')
-    //.replace(/,/g, '')
-    .toLowerCase();
-  const imageUrl = `https://codex-of-the-damned.org/card-images/${encodeURI(shortenedCardName)}.jpg`;
+const buildImageBlock = (cardResponse) => {
   return {
-			"type": "image",
-			"image_url": imageUrl,
-			"alt_text": "inspiration"
-		}
+    "type": "image",
+    "image_url": cardResponse.Image,
+    "alt_text": `Card image for ${cardResponse.Name}`,
+  };
 };
 
 const buildCardBlock = (cardResponse) => {
@@ -41,7 +33,7 @@ const buildCardBlock = (cardResponse) => {
   const cardText = cardResponse['Card Text'];
   const codexUrl = `https://codex-of-the-damned.org/en/card-search.html?card=${encodeURI(cardName)}`;
   const rulingsBlock = buildRulingBlock(cardResponse['Rulings']);
-  const imageBlock = buildImageBlock(cardName);
+  const imageBlock = buildImageBlock(cardResponse);
   let cardBlocks = [
     {
       "type": "section",
